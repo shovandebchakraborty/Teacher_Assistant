@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notice Board - TuitionTeacher</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            background: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .logo-text {
+            font-size: 28px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .notice-form {
+            background: #f8f9ff;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            border: 2px solid #e0e7ff;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 14px;
+            display: block;
+        }
+
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e7ff;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+            background: white;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .image-upload {
+            position: relative;
+        }
+
+        .image-upload input[type="file"] {
+            opacity: 0;
+            position: absolute;
+            z-index: -1;
+        }
+
+        .image-upload-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            background: white;
+            border: 2px dashed #6366f1;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            justify-content: center;
+        }
+
+        .image-upload-label:hover {
+            background: #f8f9ff;
+            border-color: #8b5cf6;
+        }
+
+        .image-preview {
+            margin-top: 15px;
+            display: none;
+        }
+
+        .image-preview img {
+            max-width: 200px;
+            max-height: 200px;
+            border-radius: 8px;
+            border: 2px solid #e0e7ff;
+        }
+
+        .image-name {
+            color: #666;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        .btn-post {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            border: none;
+            padding: 12px 32px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-post:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6);
+        }
+
+        .notices-table {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+        }
+
+        .table-header h3 {
+            font-size: 20px;
+        }
+
+        .total-count {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #f8f9ff;
+        }
+
+        th {
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid #f0f0f0;
+            color: #555;
+            font-size: 14px;
+        }
+
+        tbody tr {
+            transition: all 0.3s;
+        }
+
+        tbody tr:hover {
+            background: #f8f9ff;
+        }
+
+        .notice-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 2px solid #e0e7ff;
+        }
+
+        .no-image {
+            width: 80px;
+            height: 80px;
+            background: #f0f0f0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 12px;
+        }
+
+        .notice-instruction {
+            max-width: 400px;
+            line-height: 1.5;
+            color: #555;
+        }
+
+        .btn-action {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin-right: 8px;
+        }
+
+        .btn-edit {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #059669;
+            transform: translateY(-1px);
+        }
+
+        .btn-delete {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #dc2626;
+            transform: translateY(-1px);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        .btn-cancel {
+            background: #e5e7eb;
+            color: #333;
+            padding: 10px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-confirm {
+            background: #ef4444;
+            color: white;
+            padding: 10px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .page-title {
+                font-size: 24px;
+            }
+
+            .notice-form {
+                padding: 20px;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            th, td {
+                padding: 12px 8px;
+            }
+
+            .notice-image,
+            .no-image {
+                width: 60px;
+                height: 60px;
+            }
+
+            .btn-action {
+                padding: 6px 12px;
+                font-size: 12px;
+                display: block;
+                margin-bottom: 5px;
+            }
+
+            .table-wrapper {
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">🎓</div>
+            <div class="logo-text">TuitionTeacher</div>
+        </div>
+
+        <div>
+            <h1 class="page-title">Notice Board</h1>
+            <p class="page-subtitle">Post and manage important notices for students</p>
+        </div>
+
+        <div class="notice-form">
+            <form id="noticeForm">
+                <div class="form-group">
+                    <label for="instructionInput">Notice Instructions *</label>
+                    <textarea id="instructionInput" placeholder="Enter important instructions or announcements..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Upload Image (Optional)</label>
+                    <div class="image-upload">
+                        <div class="image-upload-label" id="imageUploadLabel">
+                            <span>🖼️ Choose an image</span>
+                        </div>
+                        <input type="file" id="imageInput" accept="image/*">
+                    </div>
+                    <div class="image-name" id="imageName"></div>
+                    <div class="image-preview" id="imagePreview">
+                        <img id="previewImg" src="" alt="Preview">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-post">📢 Post Notice</button>
+            </form>
+        </div>
+
+        <div class="notices-table">
+            <div class="table-header">
+                <h3>Posted Notices</h3>
+                <div class="total-count">Total: <span id="totalCount">0</span></div>
+            </div>
+            
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Instructions</th>
+                            <th>Posted Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="noticesBody">
+                        <tr>
+                            <td colspan="4" class="empty-state">
+                                <div class="empty-state-icon">📋</div>
+                                <div>No notices posted yet. Create your first notice!</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal" id="deleteModal">
+        <div class="modal-content">
+            <div class="modal-header">Confirm Delete</div>
+            <p>Are you sure you want to delete this notice? This action cannot be undone.</p>
+            <div class="modal-buttons">
+                <button class="btn-cancel" onclick="closeDeleteModal()">Cancel</button>
+                <button class="btn-confirm" onclick="confirmDelete()">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">Edit Notice</div>
+            <form id="editForm">
+                <div class="form-group">
+                    <label for="editInstruction">Notice Instructions *</label>
+                    <textarea id="editInstruction" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Current Image</label>
+                    <div class="image-preview" id="editImagePreview" style="display: block;">
+                        <img id="editPreviewImg" src="" alt="Current Image" style="max-width: 100%;">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Change Image (Optional)</label>
+                    <div class="image-upload">
+                        <div class="image-upload-label" id="editImageUploadLabel">
+                            <span>🖼️ Choose new image</span>
+                        </div>
+                        <input type="file" id="editImageInput" accept="image/*">
+                    </div>
+                    <div class="image-name" id="editImageName"></div>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn-cancel" onclick="closeEditModal()">Cancel</button>
+                    <button type="submit" class="btn-post">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let notices = [];
+        let deleteIndex = null;
+        let editIndex = null;
+
+        // Image upload handling
+        const imageInput = document.getElementById('imageInput');
+        const imageUploadLabel = document.getElementById('imageUploadLabel');
+        const imagePreview = document.getElementById('imagePreview');
+        const previewImg = document.getElementById('previewImg');
+        const imageName = document.getElementById('imageName');
+
+        imageUploadLabel.addEventListener('click', function(e) {
+            e.preventDefault();
+            imageInput.click();
+        });
+
+        imageInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                imageName.textContent = file.name;
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImg.src = e.target.result;
+                    imagePreview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                imageName.textContent = '';
+                imagePreview.style.display = 'none';
+            }
+        });
+
+        // Edit image upload handling
+        const editImageInput = document.getElementById('editImageInput');
+        const editImageUploadLabel = document.getElementById('editImageUploadLabel');
+        const editImageName = document.getElementById('editImageName');
+
+        editImageUploadLabel.addEventListener('click', function(e) {
+            e.preventDefault();
+            editImageInput.click();
+        });
+
+        editImageInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                editImageName.textContent = file.name;
+            } else {
+                editImageName.textContent = '';
+            }
+        });
+
+        // Notice form submission
+        document.getElementById('noticeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const instruction = document.getElementById('instructionInput').value;
+            const imageFile = imageInput.files[0];
+            
+            const notice = {
+                id: Date.now(),
+                instruction: instruction,
+                image: null,
+                date: new Date().toLocaleDateString('en-GB')
+            };
+
+            if (imageFile) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    notice.image = e.target.result;
+                    notices.push(notice);
+                    renderNotices();
+                };
+                reader.readAsDataURL(imageFile);
+            } else {
+                notices.push(notice);
+                renderNotices();
+            }
+            
+            // Reset form
+            this.reset();
+            imageName.textContent = '';
+            imagePreview.style.display = 'none';
+            
+            alert('Notice posted successfully!');
+        });
+
+        function renderNotices() {
+            const tbody = document.getElementById('noticesBody');
+            const totalCount = document.getElementById('totalCount');
+
+            if (notices.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="4" class="empty-state">
+                            <div class="empty-state-icon">📋</div>
+                            <div>No notices posted yet. Create your first notice!</div>
+                        </td>
+                    </tr>
+                `;
+                totalCount.textContent = '0';
+                return;
+            }
+
+            tbody.innerHTML = notices.map((notice, index) => `
+                <tr>
+                    <td>
+                        ${notice.image 
+                            ? `<img src="${notice.image}" alt="Notice" class="notice-image">` 
+                            : `<div class="no-image">No Image</div>`
+                        }
+                    </td>
+                    <td>
+                        <div class="notice-instruction">${notice.instruction}</div>
+                    </td>
+                    <td>${notice.date}</td>
+                    <td>
+                        <button class="btn-action btn-edit" onclick="openEditModal(${index})">✏️ Edit</button>
+                        <button class="btn-action btn-delete" onclick="openDeleteModal(${index})">🗑️ Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+
+            totalCount.textContent = notices.length;
+        }
+
+        function openDeleteModal(index) {
+            deleteIndex = index;
+            document.getElementById('deleteModal').classList.add('active');
+        }
+
+        function closeDeleteModal() {
+            deleteIndex = null;
+            document.getElementById('deleteModal').classList.remove('active');
+        }
+
+        function confirmDelete() {
+            if (deleteIndex !== null) {
+                notices.splice(deleteIndex, 1);
+                renderNotices();
+                closeDeleteModal();
+            }
+        }
+
+        function openEditModal(index) {
+            editIndex = index;
+            const notice = notices[index];
+            
+            document.getElementById('editInstruction').value = notice.instruction;
+            
+            const editPreviewImg = document.getElementById('editPreviewImg');
+            const editImagePreview = document.getElementById('editImagePreview');
+            
+            if (notice.image) {
+                editPreviewImg.src = notice.image;
+                editImagePreview.style.display = 'block';
+            } else {
+                editImagePreview.style.display = 'none';
+            }
+            
+            editImageName.textContent = '';
+            editImageInput.value = '';
+            
+            document.getElementById('editModal').classList.add('active');
+        }
+
+        function closeEditModal() {
+            editIndex = null;
+            document.getElementById('editModal').classList.remove('active');
+        }
+
+        document.getElementById('editForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (editIndex !== null) {
+                notices[editIndex].instruction = document.getElementById('editInstruction').value;
+                
+                const newImageFile = editImageInput.files[0];
+                if (newImageFile) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        notices[editIndex].image = e.target.result;
+                        renderNotices();
+                        closeEditModal();
+                        alert('Notice updated successfully!');
+                    };
+                    reader.readAsDataURL(newImageFile);
+                } else {
+                    renderNotices();
+                    closeEditModal();
+                    alert('Notice updated successfully!');
+                }
+            }
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                closeDeleteModal();
+                closeEditModal();
+            }
+        });
+    </script>
+</body>
+</html>

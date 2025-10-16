@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+  <title>Routine Management - TuitionTeacher</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #4c6ef5 0%, #5f72ff 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      padding: 20px 16px;
+    }
+
+    .container { 
+      max-width: 1200px; 
+      margin: 0 auto;
+    }
+
+    .header {
+      display: flex; 
+      align-items: center; 
+      gap: 12px; 
+      margin-bottom: 30px; 
+      color: white;
+    }
+
+    .logo {
+      width: 48px; 
+      height: 48px; 
+      background: white; 
+      border-radius: 12px;
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .logo-text { 
+      font-size: 24px; 
+      font-weight: 700;
+    }
+
+    .main-content {
+      background: white; 
+      border-radius: 16px; 
+      padding: 32px 24px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    }
+
+    .page-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: #2d3748;
+      margin-bottom: 8px;
+    }
+
+    .page-subtitle {
+      color: #718096;
+      font-size: 14px;
+      margin-bottom: 30px;
+    }
+
+    .form-section {
+      background: #f8f9fe;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 30px;
+      border: 2px solid #e2e8f0;
+    }
+
+    .form-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #2d3748;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #4a5568;
+      margin-bottom: 8px;
+    }
+
+    .form-group input,
+    .form-group select {
+      padding: 12px 14px;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: all 0.3s;
+      background: white;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #4c6ef5;
+      box-shadow: 0 0 0 3px rgba(76, 110, 245, 0.1);
+    }
+
+    .day-schedule-section {
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 2px dashed #e2e8f0;
+    }
+
+    .day-schedule-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #2d3748;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .day-card {
+      background: white;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .day-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .day-number {
+      background: linear-gradient(135deg, #4c6ef5, #5f72ff);
+      color: white;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .remove-day-btn {
+      background: #fee;
+      color: #dc2626;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+
+    .remove-day-btn:hover {
+      background: #fecaca;
+    }
+
+    .day-inputs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .add-day-btn {
+      background: #e0f2fe;
+      color: #0284c7;
+      border: 2px dashed #0284c7;
+      padding: 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .add-day-btn:hover {
+      background: #bae6fd;
+    }
+
+    .add-day-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .submit-btn {
+      background: #4c6ef5;
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 4px 10px rgba(76, 110, 245, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      justify-content: center;
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    .submit-btn:hover {
+      background: #3b5bdb;
+      transform: translateY(-2px);
+    }
+
+    .filter-section {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .filter-select {
+      padding: 12px 40px 12px 18px;
+      border-radius: 10px;
+      border: 2px solid #e2e8f0;
+      font-size: 14px;
+      color: #2d3748;
+      background: white;
+      cursor: pointer;
+      transition: 0.3s ease;
+      min-width: 180px;
+      -webkit-appearance: none;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23718096' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+    }
+
+    .filter-select:focus {
+      border-color: #4c6ef5;
+      box-shadow: 0 0 0 3px rgba(76, 110, 245, 0.1);
+      outline: none;
+    }
+
+    .posted-section {
+      background: linear-gradient(135deg, #4c6ef5, #5f72ff);
+      color: white;
+      padding: 20px 24px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .posted-section h2 {
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .total-badge {
+      background: rgba(255, 255, 255, 0.3);
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .routine-cards {
+      display: grid;
+      gap: 16px;
+    }
+
+    .routine-card {
+      background: white;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 20px;
+      transition: 0.3s;
+    }
+
+    .routine-card:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      border-color: #4c6ef5;
+    }
+
+    .routine-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #f1f5f9;
+      gap: 12px;
+    }
+
+    .routine-class {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      flex: 1;
+    }
+
+    .class-badge {
+      background: #dcfce7;
+      color: #16a34a;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .batch-badge {
+      background: #e0f2fe;
+      color: #0284c7;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .routine-actions {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .action-btn {
+      border: none;
+      padding: 8px 14px;
+      border-radius: 7px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .edit-btn {
+      background: #48bb78;
+      color: white;
+    }
+
+    .edit-btn:hover {
+      background: #38a169;
+    }
+
+    .delete-btn {
+      background: #f56565;
+      color: white;
+    }
+
+    .delete-btn:hover {
+      background: #e53e3e;
+    }
+
+    .routine-days {
+      display: grid;
+      gap: 10px;
+    }
+
+    .day-item {
+      display: grid;
+      grid-template-columns: 120px 100px 1fr;
+      gap: 12px;
+      align-items: center;
+      padding: 10px;
+      background: #f8f9fe;
+      border-radius: 8px;
+    }
+
+    .day-badge {
+      background: #e2e8f0;
+      color: #2d3748;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .time-badge {
+      background: #fff5e6;
+      color: #d97706;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .subject-text {
+      color: #2d3748;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #718096;
+    }
+
+    .empty-state-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+
+    .empty-state p {
+      font-size: 16px;
+      margin-bottom: 8px;
+      color: #4a5568;
+    }
+
+    .success-message {
+      background: #48bb78;
+      color: white;
+      padding: 14px 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateY(-20px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 12px;
+      }
+
+      .main-content {
+        padding: 20px 16px;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .day-inputs {
+        grid-template-columns: 1fr;
+      }
+
+      .day-item {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        text-align: center;
+      }
+
+      .filter-section {
+        flex-direction: column;
+      }
+
+      .filter-select {
+        width: 100%;
+      }
+
+      .posted-section {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+      }
+
+      .routine-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+      }
+
+      .routine-class {
+        gap: 6px;
+      }
+
+      .class-badge,
+      .batch-badge {
+        font-size: 11px;
+        padding: 5px 10px;
+      }
+
+      .routine-actions {
+        justify-content: flex-end;
+        gap: 8px;
+      }
+
+      .action-btn {
+        flex: 1;
+        padding: 8px 12px;
+        font-size: 11px;
+      }
+
+      .day-badge,
+      .time-badge {
+        font-size: 11px;
+        padding: 5px 10px;
+      }
+
+      .subject-text {
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo">🎓</div>
+      <span class="logo-text">TuitionTeacher</span>
+    </div>
+
+    <div class="main-content">
+      <div class="success-message" id="successMessage">
+        ✓ Routine added successfully!
+      </div>
+
+      <h1 class="page-title">Routine Management</h1>
+      <p class="page-subtitle">Create and manage class schedules with 3-day weekly routine</p>
+
+      <!-- Add Routine Form -->
+      <div class="form-section">
+        <div class="form-title">
+          <span>📅</span>
+          <span>Add New Routine</span>
+        </div>
+
+        <form id="routineForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="class">Class *</label>
+              <select id="class" required>
+                <option value="">Select Class</option>
+                <option value="I">Class I</option>
+                <option value="II">Class II</option>
+                <option value="III">Class III</option>
+                <option value="IV">Class IV</option>
+                <option value="V">Class V</option>
+                <option value="VI">Class VI</option>
+                <option value="VII">Class VII</option>
+                <option value="VIII">Class VIII</option>
+                <option value="IX">Class IX</option>
+                <option value="X">Class X</option>
+                <option value="XI">Class XI</option>
+                <option value="XII">Class XII</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="batch">Batch (Optional)</label>
+              <select id="batch">
+                <option value="">No Batch</option>
+                <option value="A">Batch A</option>
+                <option value="B">Batch B</option>
+                <option value="C">Batch C</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="daysPerWeek">Days per Week *</label>
+              <select id="daysPerWeek" required>
+                <option value="">Select Days</option>
+                <option value="1">1 Day</option>
+                <option value="2">2 Days</option>
+                <option value="3">3 Days</option>
+                <option value="4">4 Days</option>
+                <option value="5">5 Days</option>
+                <option value="6">6 Days</option>
+                <option value="7">7 Days</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="day-schedule-section">
+            <div class="day-schedule-title">
+              <span>📆</span>
+              <span>Weekly Schedule</span>
+              <span style="font-size: 13px; color: #718096; font-weight: 400;">(Select days per week first)</span>
+            </div>
+
+            <div id="daySchedules">
+              <!-- Day schedules will be generated dynamically -->
+            </div>
+          </div>
+
+          <button type="submit" class="submit-btn">
+            <span>➕</span>
+            <span>Add Routine</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- Filter Section -->
+      <div class="filter-section">
+        <select id="classFilter" class="filter-select" onchange="filterRoutines()">
+          <option value="all">All Classes</option>
+          <option value="I">Class I</option>
+          <option value="II">Class II</option>
+          <option value="III">Class III</option>
+          <option value="IV">Class IV</option>
+          <option value="V">Class V</option>
+          <option value="VI">Class VI</option>
+          <option value="VII">Class VII</option>
+          <option value="VIII">Class VIII</option>
+          <option value="IX">Class IX</option>
+          <option value="X">Class X</option>
+          <option value="XI">Class XI</option>
+          <option value="XII">Class XII</option>
+        </select>
+
+        <select id="batchFilter" class="filter-select" onchange="filterRoutines()">
+          <option value="all">All Batches</option>
+          <option value="">No Batch</option>
+          <option value="A">Batch A</option>
+          <option value="B">Batch B</option>
+          <option value="C">Batch C</option>
+        </select>
+      </div>
+
+      <!-- Posted Routines -->
+      <div class="posted-section">
+        <h2>Posted Routines</h2>
+        <div class="total-badge">
+          Total: <span id="totalRoutines">0</span>
+        </div>
+      </div>
+
+      <!-- Routines Display -->
+      <div class="routine-cards" id="routineCards">
+        <div class="empty-state">
+          <div class="empty-state-icon">📋</div>
+          <p>No routines posted yet. Create your first routine!</p>
+          <small>Add class schedules with 3-day weekly routine</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let routines = [];
+
+    // Generate day schedules based on days per week selection
+    document.getElementById('daysPerWeek').addEventListener('change', function() {
+      const numDays = parseInt(this.value);
+      const container = document.getElementById('daySchedules');
+      
+      if (numDays > 0) {
+        container.innerHTML = '';
+        
+        for (let i = 1; i <= numDays; i++) {
+          const dayCard = document.createElement('div');
+          dayCard.className = 'day-card';
+          dayCard.setAttribute('data-day', i);
+          
+          dayCard.innerHTML = `
+            <div class="day-card-header">
+              <span class="day-number">Day ${i}</span>
+            </div>
+            <div class="day-inputs">
+              <div class="form-group">
+                <label>Day *</label>
+                <select class="day-select" required>
+                  <option value="">Select Day</option>
+                  <option value="Sunday">Sunday</option>
+                  <option value="Monday">Monday</option>
+                  <option value="Tuesday">Tuesday</option>
+                  <option value="Wednesday">Wednesday</option>
+                  <option value="Thursday">Thursday</option>
+                  <option value="Friday">Friday</option>
+                  <option value="Saturday">Saturday</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Time *</label>
+                <div style="display: flex; gap: 8px;">
+                  <input type="number" class="time-hour" min="1" max="12" placeholder="HH" required style="width: 60px;">
+                  <span style="align-self: center; font-weight: bold;">:</span>
+                  <input type="number" class="time-minute" min="0" max="59" placeholder="MM" required style="width: 60px;">
+                  <select class="time-period" required style="width: 70px;">
+                    <option value="AM">AM</option>
+                    <option value="PM">PM</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group" style="grid-column: 1 / -1;">
+                <label>Subject *</label>
+                <input type="text" class="subject-input" placeholder="e.g., Mathematics" required>
+              </div>
+            </div>
+          `;
+          
+          container.appendChild(dayCard);
+        }
+      } else {
+        container.innerHTML = '';
+      }
+    });
+
+    // Form submission
+    document.getElementById('routineForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const dayCards = document.querySelectorAll('.day-card');
+      const days = [];
+
+      dayCards.forEach(card => {
+        const day = card.querySelector('.day-select').value;
+        const hour = card.querySelector('.time-hour').value;
+        const minute = card.querySelector('.time-minute').value;
+        const period = card.querySelector('.time-period').value;
+        const subject = card.querySelector('.subject-input').value;
+        
+        // Format time as "HH:MM AM/PM"
+        const paddedMinute = minute.padStart(2, '0');
+        const time = `${hour}:${paddedMinute} ${period}`;
+        
+        days.push({ day, time, subject });
+      });
+
+      const routine = {
+        id: Date.now(),
+        class: document.getElementById('class').value,
+        batch: document.getElementById('batch').value,
+        daysPerWeek: document.getElementById('daysPerWeek').value,
+        days: days
+      };
+
+      routines.push(routine);
+      renderRoutines();
+      
+      // Show success message
+      const successMsg = document.getElementById('successMessage');
+      successMsg.style.display = 'flex';
+      setTimeout(() => {
+        successMsg.style.display = 'none';
+      }, 3000);
+
+      // Reset form
+      this.reset();
+      document.getElementById('daySchedules').innerHTML = '';
+    });
+
+    function renderRoutines() {
+      const container = document.getElementById('routineCards');
+      const classFilter = document.getElementById('classFilter').value;
+      const batchFilter = document.getElementById('batchFilter').value;
+
+      let filteredRoutines = routines.filter(routine => {
+        const classMatch = classFilter === 'all' || routine.class === classFilter;
+        const batchMatch = batchFilter === 'all' || routine.batch === batchFilter;
+        return classMatch && batchMatch;
+      });
+
+      if (filteredRoutines.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">📋</div>
+            <p>No routines found</p>
+            <small>Try adjusting your filters or add a new routine</small>
+          </div>
+        `;
+      } else {
+        container.innerHTML = filteredRoutines.map(routine => `
+          <div class="routine-card">
+            <div class="routine-header">
+              <div class="routine-class">
+                <span class="class-badge">Class ${routine.class}</span>
+                ${routine.batch ? `<span class="batch-badge">Batch ${routine.batch}</span>` : ''}
+                <span class="batch-badge" style="background: #fef3c7; color: #92400e;">${routine.daysPerWeek} Days/Week</span>
+              </div>
+              <div class="routine-actions">
+                <button class="action-btn edit-btn" onclick="editRoutine(${routine.id})">📝 Edit</button>
+                <button class="action-btn delete-btn" onclick="deleteRoutine(${routine.id})">🗑️ Delete</button>
+              </div>
+            </div>
+            <div class="routine-days">
+              ${routine.days.map((day, index) => `
+                <div class="day-item">
+                  <span class="day-badge">${day.day}</span>
+                  <span class="time-badge">${day.time}</span>
+                  <span class="subject-text">${day.subject}</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `).join('');
+      }
+
+      document.getElementById('totalRoutines').textContent = routines.length;
+    }
+
+    function formatTime(time) {
+      // Time is already in "HH:MM AM/PM" format, just return it
+      return time;
+    }
+
+    function filterRoutines() {
+      renderRoutines();
+    }
+
+    function editRoutine(id) {
+      const routine = routines.find(r => r.id === id);
+      if (routine) {
+        document.getElementById('class').value = routine.class;
+        document.getElementById('batch').value = routine.batch;
+        document.getElementById('daysPerWeek').value = routine.daysPerWeek;
+        
+        // Trigger the days per week change to generate day cards
+        const event = new Event('change');
+        document.getElementById('daysPerWeek').dispatchEvent(event);
+        
+        // Wait a moment for cards to be generated, then populate them
+        setTimeout(() => {
+          const dayCards = document.querySelectorAll('.day-card');
+          routine.days.forEach((day, index) => {
+            if (dayCards[index]) {
+              dayCards[index].querySelector('.day-select').value = day.day;
+              
+              // Parse time like "10:30 AM"
+              const timeMatch = day.time.match(/(\d+):(\d+)\s*(AM|PM)/);
+              if (timeMatch) {
+                dayCards[index].querySelector('.time-hour').value = timeMatch[1];
+                dayCards[index].querySelector('.time-minute').value = timeMatch[2];
+                dayCards[index].querySelector('.time-period').value = timeMatch[3];
+              }
+              
+              dayCards[index].querySelector('.subject-input').value = day.subject;
+            }
+          });
+        }, 100);
+        
+        // Remove the routine and it will be re-added on form submit
+        routines = routines.filter(r => r.id !== id);
+        renderRoutines();
+        
+        // Scroll to form
+        document.querySelector('.form-section').scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    function deleteRoutine(id) {
+      if (confirm('Are you sure you want to delete this routine?')) {
+        routines = routines.filter(r => r.id !== id);
+        renderRoutines();
+      }
+    }
+  </script>
+</body>
+</html>
