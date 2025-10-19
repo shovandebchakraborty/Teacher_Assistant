@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>Fees Setup - TuitionTeacher</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #4c6ef5 0%, #5f72ff 100%);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 250px;
+            background: #f0f0f0;
+            clip-path: polygon(0 60%, 100% 0, 100% 100%, 0 100%);
+            z-index: 1;
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            width: 95%;
+            margin: 0 auto;
+            padding: 30px 16px;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 40px;
+            color: white;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            background: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .logo-text {
+            font-size: 28px;
+            font-weight: 700;
+            word-break: break-word;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: white;
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-size: 15px;
+            transition: all 0.2s ease;
+            flex-wrap: wrap;
+        }
+
+        .back-link:hover {
+            gap: 10px;
+        }
+
+        .main-content {
+            background: white;
+            border-radius: 18px;
+            padding: 40px 32px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            width: 100%;
+        }
+
+        .form-header {
+            margin-bottom: 30px;
+        }
+
+        .form-header h1 {
+            font-size: 28px;
+            color: #2d3748;
+            font-weight: 700;
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+
+        .form-header p {
+            color: #718096;
+            font-size: 15px;
+            line-height: 1.4;
+        }
+
+        form {
+            width: 100%;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #2d3748;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .form-group label .required {
+            color: #e53e3e;
+            margin-left: 2px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .form-input:focus {
+            border-color: #4c6ef5;
+            box-shadow: 0 0 0 3px rgba(76, 110, 245, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: #a0aec0;
+        }
+
+        .form-input.error {
+            border-color: #e53e3e;
+        }
+
+        .error-message {
+            color: #e53e3e;
+            font-size: 13px;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        select.form-input {
+            cursor: pointer;
+            background-color: white;
+        }
+
+        textarea.form-input {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .button-section {
+            display: flex;
+            gap: 12px;
+            margin-top: 32px;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+        }
+
+        .btn {
+            padding: 14px 32px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+            min-width: 140px;
+            text-align: center;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: #4c6ef5;
+            color: white;
+            box-shadow: 0 4px 10px rgba(76, 110, 245, 0.3);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #3b5bdb;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #2d3748;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #cbd5e0;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            width: 100%;
+        }
+
+        .table-section {
+            margin-top: 40px;
+            padding-top: 40px;
+            border-top: 2px solid #e2e8f0;
+        }
+
+        .table-header {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .table-header h2 {
+            font-size: 22px;
+            color: #2d3748;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .table-header p {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .search-box {
+            padding: 10px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            width: 250px;
+        }
+
+        .search-box:focus {
+            border-color: #4c6ef5;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        thead {
+            background: #4c6ef5;
+            color: white;
+        }
+
+        th {
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #e2e8f0;
+            transition: background-color 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background-color: #f7fafc;
+        }
+
+        tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        tbody tr.hidden {
+            display: none;
+        }
+
+        td {
+            padding: 16px;
+            color: #2d3748;
+            font-size: 15px;
+        }
+
+        .action-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .edit-btn {
+            background: #10b981;
+            color: white;
+        }
+
+        .edit-btn:hover {
+            background: #059669;
+            transform: translateY(-1px);
+        }
+
+        .delete-btn {
+            background: #e53e3e;
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background: #c53030;
+            transform: translateY(-1px);
+        }
+
+        .empty-state {
+            padding: 40px 20px;
+            text-align: center;
+            color: #718096;
+            font-size: 15px;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+            opacity: 0.5;
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 16px 24px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateX(400px);
+            transition: all 0.3s ease;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .toast.success {
+            border-left: 4px solid #10b981;
+        }
+
+        .toast.error {
+            border-left: 4px solid #e53e3e;
+        }
+
+        .toast-icon {
+            font-size: 24px;
+        }
+
+        .toast-message {
+            color: #2d3748;
+            font-weight: 500;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 32px;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            margin-bottom: 20px;
+        }
+
+        .modal-header h3 {
+            font-size: 22px;
+            color: #2d3748;
+            margin-bottom: 8px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 28px 20px;
+            }
+
+            .form-header h1 {
+                font-size: 24px;
+            }
+
+            .button-section {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            th,
+            td {
+                padding: 12px 10px;
+                font-size: 14px;
+            }
+
+            .table-header h2 {
+                font-size: 20px;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .logo-text {
+                font-size: 22px;
+            }
+
+            .main-content {
+                padding: 24px 16px;
+            }
+
+            .form-header h1 {
+                font-size: 22px;
+            }
+
+            .form-header p {
+                font-size: 14px;
+            }
+
+            .toast {
+                right: 10px;
+                left: 10px;
+                width: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">🎓</div>
+            <span class="logo-text">TuitionTeacher</span>
+        </div>
+
+        <a href="#" class="back-link" onclick="goBack()">← Back to Dashboard</a>
+
+        <div class="main-content">
+            <div class="form-header">
+                <h1>Add New Class</h1>
+                <p>
+                    Fill in the class details to add them to your tuition management
+                    system
+                </p>
+            </div>
+
+            <form id="classForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="className">Class Name <span class="required">*</span></label>
+                        <input type="text" id="className" name="className" class="form-input"
+                            placeholder="e.g., Class X - Science" required />
+                        <div class="error-message" id="classNameError">Please enter a class name</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="feesPerMonth">Fees per Month <span class="required">*</span></label>
+                        <input type="number" id="feesPerMonth" name="feesPerMonth" class="form-input"
+                            placeholder="Enter monthly fees" min="0" step="1" required />
+                        <div class="error-message" id="feesError">Please enter valid fees</div>
+                    </div>
+                </div>
+
+                <div class="button-section">
+                    <button type="button" class="btn btn-secondary" onclick="resetForm()">
+                        Reset Form
+                    </button>
+                    <button type="submit" class="btn btn-primary" id="submitBtn">Add Class</button>
+                </div>
+            </form>
+
+            <div class="table-section">
+                <div class="table-header">
+                    <div>
+                        <h2>Added Classes (<span id="classCount">0</span>)</h2>
+                        <p>List of all classes with their monthly fees</p>
+                    </div>
+                    <input type="text" class="search-box" id="searchBox" placeholder="🔍 Search classes..." />
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>S.No.</th>
+                                <th>Class Name</th>
+                                <th>Fees per Month</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody id="classTableBody">
+                            <tr>
+                                <td colspan="5" class="empty-state">
+                                    <div class="empty-state-icon">📚</div>
+                                    <div>No classes added yet. Add your first class above!</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Edit Class</h3>
+            </div>
+            <form id="editForm">
+                <div class="form-group">
+                    <label for="editClassName">Class Name <span class="required">*</span></label>
+                    <input type="text" id="editClassName" class="form-input" required />
+                </div>
+                <div class="form-group">
+                    <label for="editFees">Fees per Month <span class="required">*</span></label>
+                    <input type="number" id="editFees" class="form-input" min="0" step="1" required />
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Data store
+        let classes = [];
+        let editingIndex = null;
+        const STORAGE_KEY = 'tuitionteacher_classes';
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadFromStorage();
+            updateTable();
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            // Form submission
+            document.getElementById('classForm').addEventListener('submit', handleFormSubmit);
+            
+            // Edit form submission
+            document.getElementById('editForm').addEventListener('submit', handleEditSubmit);
+            
+            // Search functionality
+            document.getElementById('searchBox').addEventListener('input', handleSearch);
+            
+            // Input validation
+            document.getElementById('className').addEventListener('input', validateClassName);
+            document.getElementById('feesPerMonth').addEventListener('input', validateFees);
+        }
+
+        function validateClassName(e) {
+            const input = e.target;
+            const error = document.getElementById('classNameError');
+            
+            if (input.value.trim().length < 2) {
+                input.classList.add('error');
+                error.classList.add('show');
+            } else {
+                input.classList.remove('error');
+                error.classList.remove('show');
+            }
+        }
+
+        function validateFees(e) {
+            const input = e.target;
+            const error = document.getElementById('feesError');
+            
+            if (input.value <= 0 || !input.value) {
+                input.classList.add('error');
+                error.classList.add('show');
+            } else {
+                input.classList.remove('error');
+                error.classList.remove('show');
+            }
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            
+            const className = document.getElementById('className').value.trim();
+            const fees = parseFloat(document.getElementById('feesPerMonth').value);
+            
+            // Validation
+            if (!className || className.length < 2) {
+                showToast('Please enter a valid class name', 'error');
+                return;
+            }
+            
+            if (!fees || fees <= 0) {
+                showToast('Please enter valid fees', 'error');
+                return;
+            }
+            
+            // Check for duplicates
+            if (classes.some(c => c.name.toLowerCase() === className.toLowerCase())) {
+                showToast('Class already exists!', 'error');
+                return;
+            }
+            
+            // Add class
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Adding...';
+            
+            setTimeout(() => {
+                const newClass = {
+                    id: Date.now(),
+                    name: className,
+                    fees: fees
+                };
+                
+                classes.push(newClass);
+                saveToStorage();
+                updateTable();
+                resetForm();
+                showToast('Class added successfully!', 'success');
+                
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Add Class';
+            }, 500);
+        }
+
+        function updateTable() {
+            const tbody = document.getElementById('classTableBody');
+            document.getElementById('classCount').textContent = classes.length;
+            
+            if (classes.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="empty-state">
+                            <div class="empty-state-icon">📚</div>
+                            <div>No classes added yet. Add your first class above!</div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = classes.map((cls, index) => `
+                <tr data-id="${cls.id}">
+                    <td>${index + 1}</td>
+                    <td>${escapeHtml(cls.name)}</td>
+                    <td>₹${cls.fees.toLocaleString()}</td>
+                    <td>
+                        <button class="action-btn edit-btn" onclick="openEditModal(${cls.id})">
+                            ✏ Edit
+                        </button>
+                    </td>
+                    <td>
+                        <button class="action-btn delete-btn" onclick="deleteClass(${cls.id})">
+                            🗑 Delete
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function openEditModal(id) {
+            const cls = classes.find(c => c.id === id);
+            if (!cls) return;
+            
+            editingIndex = id;
+            document.getElementById('editClassName').value = cls.name;
+            document.getElementById('editFees').value = cls.fees;
+            document.getElementById('editModal').classList.add('show');
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').classList.remove('show');
+            editingIndex = null;
+        }
+
+        function handleEditSubmit(e) {
+            e.preventDefault();
+            
+            const className = document.getElementById('editClassName').value.trim();
+            const fees = parseFloat(document.getElementById('editFees').value);
+            
+            if (!className || fees <= 0) {
+                showToast('Please fill all fields correctly', 'error');
+                return;
+            }
+            
+            const index = classes.findIndex(c => c.id === editingIndex);
+            if (index !== -1) {
+                classes[index].name = className;
+                classes[index].fees = fees;
+                saveToStorage();
+                updateTable();
+                closeEditModal();
+                showToast('Class updated successfully!', 'success');
+            }
+        }
+
+        function deleteClass(id) {
+            if (!confirm('Are you sure you want to delete this class?')) return;
+            
+            const index = classes.findIndex(c => c.id === id);
+            if (index !== -1) {
+                classes.splice(index, 1);
+                saveToStorage();
+                updateTable();
+                showToast('Class deleted successfully!', 'success');
+            }
+        }
+
+        function handleSearch(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const rows = document.querySelectorAll('#classTableBody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    row.classList.remove('hidden');
+                } else {
+                    row.classList.add('hidden');
+                }
+            });
+        }
+
+        function resetForm() {
+            document.getElementById('classForm').reset();
+            document.querySelectorAll('.error-message').forEach(msg => msg.classList.remove('show'));
+            document.querySelectorAll('.form-input').forEach(input => input.classList.remove('error'));
+        }
+
+        function saveToStorage() {
+            try {
+                const data = JSON.stringify(classes);
+                console.log('Classes saved:', classes);
+                // In a real application, you would save to a backend or database
+                // For now, data persists only in memory during the session
+            } catch (error) {
+                console.error('Error saving data:', error);
+            }
+        }
+
+        function loadFromStorage() {
+            // Demo data for testing
+            classes = [
+                { id: 1, name: 'Class X - Science', fees: 5000 },
+                { id: 2, name: 'Class XII - Mathematics', fees: 6000 }
+            ];
+        }
+
+        function showToast(message, type = 'success') {
+            const existingToast = document.querySelector('.toast');
+            if (existingToast) existingToast.remove();
+            
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `
+                <div class="toast-icon">${type === 'success' ? '✓' : '⚠'}</div>
+                <div class="toast-message">${message}</div>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => toast.classList.add('show'), 100);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+
+        // Close modal on outside click
+        document.getElementById('editModal').addEventListener('click', function(e) {
+            if (e.target === this) closeEditModal();
+        });
+    </script>
+</body>
+
+</html>
